@@ -5,12 +5,13 @@
 package wav
 
 import (
-	"azul3d.org/audio.v1"
 	"encoding/binary"
 	"errors"
 	"io"
 	"sync"
 	"unsafe"
+
+	"azul3d.org/audio.v1"
 )
 
 const (
@@ -152,6 +153,7 @@ func (d *decoder) readPCM24(b audio.Slice) (read int, err error) {
 		}
 
 		var ss audio.PCM32
+		ss = audio.PCM32(sample[0]) | audio.PCM32(sample[1])<<8 | audio.PCM32(sample[2])<<16
 		if (ss & 0x800000) > 0 {
 			ss |= ^0xffffff
 		}
