@@ -5,9 +5,10 @@
 package wav
 
 import (
-	"azul3d.org/audio.v1"
 	"os"
 	"testing"
+
+	"azul3d.org/audio.v1"
 )
 
 func testDecode(t *testing.T, fileName string) {

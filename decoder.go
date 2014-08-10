@@ -5,12 +5,13 @@
 package wav
 
 import (
-	"azul3d.org/audio.v1"
 	"encoding/binary"
 	"errors"
 	"io"
 	"sync"
 	"unsafe"
+
+	"azul3d.org/audio.v1"
 )
 
 const (
