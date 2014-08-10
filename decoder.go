@@ -153,6 +153,7 @@ func (d *decoder) readPCM24(b audio.Slice) (read int, err error) {
 		}
 
 		var ss audio.PCM32
+		ss = audio.PCM32(sample[0]) | audio.PCM32(sample[1])<<8 | audio.PCM32(sample[2])<<16
 		if (ss & 0x800000) > 0 {
 			ss |= ^0xffffff
 		}
