@@ -2,6 +2,27 @@ package wav
 
 import "encoding/binary"
 
+// A brief introduction of the WAV audio format [1][2] follows. A WAV file
+// consists of a sequence of chunks as specified by the RIFF format. Each chunk
+// has a header and a body. The header specifies the type of the chunk and the
+// size of its body.
+//
+// The first chunk of a WAV file is the standard RIFF type chunk, with a "WAVE"
+// type ID. It is followed by a mandatory format chunk, which describes the
+// basic properties of the audio stream; such as its sample rate and the number
+// of channels used. Subsequent chunks may appear in any order and several
+// chunks are optional. The only other chunk that is mandatory is the data
+// chunk, which contains the encoded audio samples.
+//
+// Below follows an overview of a basic WAV file.
+//
+//    Header: {id: "RIFF", size: 0004}
+//    Body:   "WAVE"
+//    Header: {id: "fmt ", size: NNNN}
+//    Body:   format of the audio samples
+//    Header: {id: "data", size: NNNN}
+//    Body:   audio samples
+
 // writeHeader writes a WAV file header to enc.bw, based on the provided audio
 // configuration.
 func (enc *encoder) writeHeader() error {
