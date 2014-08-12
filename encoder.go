@@ -54,16 +54,51 @@ func NewEncoder(w io.WriteSeeker, conf audio.Config) (audio.Encoder, error) {
 // with regards to the writer: no more data can be subsequently wrote after
 // an error.
 func (enc *encoder) Write(b audio.Slice) (n int, err error) {
-	// TODO(u): Implement fast-paths for PCM8, PCM16 and PCM24 (PCM32).
+	// The at closure returns the i:th sample of b at a byte slice.
+	var buf [3]byte
+	var at func(i int) []byte
+	switch v := b.(type) {
+	case audio.PCM8Samples:
+		panic("not yet implemented.")
+		at = func(i int) []byte {
+			// Unsigned 8-bit PCM audio sample.
+			buf[0] = uint8(0x80 + v[i])
+			return buf[:1]
+		}
+	case audio.PCM16Samples:
+		at = func(i int) []byte {
+			// Signed 16-bit PCM audio sample.
+			sample := v[i]
+			buf[0] = uint8(sample)
+			buf[1] = uint8(sample >> 8)
+			return buf[:2]
+		}
+	case audio.PCM32Samples:
+		panic("not yet implemented.")
+		at = func(i int) []byte {
+			// Signed 32-bit PCM audio sample.
+			sample := v[i]
+			buf[0] = uint8(sample)
+			buf[1] = uint8(sample >> 8)
+			buf[2] = uint8(sample >> 16)
+			return buf[:3]
+		}
+	default:
+		at = func(i int) []byte {
+			// Generic implementation.
+			// TODO(u): Update to support 32-bit PCM audio samples, one the rest of
+			// the encoder does so.
+			sample := audio.F64ToPCM16(b.At(i))
+			buf[0] = uint8(sample)
+			buf[1] = uint8(sample >> 8)
+			return buf[:2]
+		}
+	}
 
 	// Generic implementation.
-	var buf [2]byte
 	for ; n < b.Len(); n++ {
-		f := b.At(n)
-		sample := audio.F64ToPCM16(f)
-		buf[0] = uint8(sample)
-		buf[1] = uint8(sample >> 8)
-		m, err := enc.bw.Write(buf[:])
+		buf := at(n)
+		m, err := enc.bw.Write(buf)
 		if err != nil {
 			return n, err
 		}
