@@ -7,6 +7,8 @@ package wav
 import (
 	"os"
 	"testing"
+	"io/ioutil"
+	"bytes"
 
 	"azul3d.org/audio.v1"
 )
@@ -78,4 +80,33 @@ func TestMulaw(t *testing.T) {
 
 func TestUint8(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_uint8.wav")
+}
+
+func BenchmarkInt24(b *testing.B) {
+	data, err := ioutil.ReadFile("testdata/tune_stereo_44100hz_int24.wav")
+	if err != nil {
+		b.Fatal(err)
+	}
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		// Create an decoder for the audio source
+		decoder, _, err := audio.NewDecoder(bytes.NewReader(data))
+		if err != nil {
+			b.Fatal(err)
+		}
+
+		// Grab the decoder's configuration
+		config := decoder.Config()
+
+		// Create an buffer that can hold 1 second of audio samples
+		bufSize := 1 * config.SampleRate * config.Channels
+		buf := make(audio.F64Samples, bufSize)
+
+		// Fill the buffer with as many audio samples as we can
+		_, err = decoder.Read(buf)
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
 }
