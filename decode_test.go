@@ -5,10 +5,10 @@
 package wav
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
 	"testing"
-	"io/ioutil"
-	"bytes"
 
 	"azul3d.org/audio.v1"
 )
@@ -50,31 +50,31 @@ func testDecode(t *testing.T, fileName string) {
 	// }
 }
 
-func TestALaw(t *testing.T) {
+func TestDecodeALaw(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_alaw.wav")
 }
 
-func TestFloat32(t *testing.T) {
+func TestDecodeFloat32(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_float32.wav")
 }
 
-func TestFloat64(t *testing.T) {
+func TestDecodeFloat64(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_float64.wav")
 }
 
-func TestInt16(t *testing.T) {
+func TestDecodeInt16(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_int16.wav")
 }
 
-func TestInt24(t *testing.T) {
+func TestDecodeInt24(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_int24.wav")
 }
 
-func TestInt32(t *testing.T) {
+func TestDecodeInt32(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_int32.wav")
 }
 
-func TestMulaw(t *testing.T) {
+func TestDecodeMulaw(t *testing.T) {
 	testDecode(t, "testdata/tune_stereo_44100hz_mulaw.wav")
 }
 
