@@ -17,6 +17,7 @@ type decodeTest struct {
 	file         string
 	samplesTotal int
 	audio.Config
+	start audio.Slice
 }
 
 func testDecode(t *testing.T, tst decodeTest) {
@@ -45,13 +46,25 @@ func testDecode(t *testing.T, tst decodeTest) {
 
 	// Create a slice large enough to hold 1 second of audio samples.
 	bufSize := 1 * config.SampleRate * config.Channels
-	buf := make(audio.F64Samples, bufSize)
+	buf := tst.start.Make(bufSize, bufSize)
 
 	// Read audio samples until there are no more.
+	first := true
 	var samplesTotal int
 	for {
 		read, err := decoder.Read(buf)
 		samplesTotal += read
+		if first {
+			// Validate the audio samples.
+			first = false
+			for i := 0; i < tst.start.Len(); i++ {
+				if buf.At(i) != tst.start.At(i) {
+					t.Log("got", buf.Slice(0, tst.start.Len()))
+					t.Log("want", tst.start)
+					t.Fatal("Bad sample data.")
+				}
+			}
+		}
 		if err == audio.EOS {
 			break
 		}
@@ -74,6 +87,7 @@ func TestDecodeFloat32(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.F32Samples{0, 0, 9.682657e-08, 3.3106906e-10, 9.845178e-07, 3.9564156e-09, 3.711236e-06, 1.869304e-08, 8.562939e-06, 5.7355663e-08, 1.4786613e-05, 1.3752022e-07, 2.1342606e-05, 2.8124632e-07, 2.7840168e-05},
 	})
 }
 
@@ -85,6 +99,7 @@ func TestDecodeFloat64(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.F64Samples{0, 0, 9.682656809673063e-08, 3.31069061054734e-10, 9.845177828537999e-07, 3.9564156395499595e-09, 3.7112361042090924e-06, 1.8693040004791328e-08, 8.56293900142191e-06, 5.7355663329872186e-08, 1.4786613064643461e-05, 1.375202174358492e-07, 2.134260648745112e-05, 2.812463151258271e-07, 2.7840167604153976e-05},
 	})
 }
 
@@ -96,6 +111,7 @@ func TestDecodeUInt8(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.PCM8Samples{128, 128, 128, 128, 127, 128, 127, 128, 128, 127, 128, 128, 127, 128, 127},
 	})
 }
 
@@ -107,6 +123,7 @@ func TestDecodeInt16(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.PCM16Samples{0, 0, 0, -1, 2, -2, 3, -3, 2, -1, 1, 0, 2, -3, 4},
 	})
 }
 
@@ -118,6 +135,7 @@ func TestDecodeInt24(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.PCM32Samples{0, 0, 0, 0, 8, 0, 31, 0, 71, 0, 124, 1, 179, 2, 233},
 	})
 }
 
@@ -129,6 +147,7 @@ func TestDecodeInt32(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.PCM32Samples{0, 0, 208, 1, 2114, 8, 7970, 40, 18389, 123, 31754, 295, 45833, 604, 59786},
 	})
 }
 
@@ -140,6 +159,7 @@ func TestDecodeALaw(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.ALawSamples{213, 213, 85, 213, 85, 213, 85, 213, 85, 213, 85, 213, 213, 213, 213},
 	})
 }
 
@@ -151,6 +171,7 @@ func TestDecodeMuLaw(t *testing.T) {
 			SampleRate: 44100,
 			Channels:   2,
 		},
+		start: audio.MuLawSamples{255, 255, 255, 255, 255, 255, 127, 255, 255, 127, 255, 255, 127, 255, 127},
 	})
 }
 
