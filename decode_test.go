@@ -178,7 +178,7 @@ func TestDecodeMuLaw(t *testing.T) {
 func benchDecode(b *testing.B, fmt audio.Slice, path string) {
 	// Read the file into memory so we are strictly benchmarking the decoder,
 	// avoiding disk read performance.
-	data, err := ioutil.ReadFile("testdata/tune_stereo_44100hz_int24.wav")
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		b.Fatal(err)
 	}
