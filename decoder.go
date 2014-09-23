@@ -9,7 +9,6 @@ import (
 	"errors"
 	"io"
 	"sync"
-	"unsafe"
 
 	"azul3d.org/audio.v1"
 )
@@ -45,7 +44,7 @@ type decoder struct {
 	config *audio.Config
 }
 
-func (d *decoder) bRead(data interface{}, sz uintptr) error {
+func (d *decoder) bRead(data interface{}, sz int) error {
 	d.currentCount += uint32(sz)
 	if d.chunkSize > 0 {
 		if d.currentCount > d.chunkSize {
@@ -68,14 +67,14 @@ func (d *decoder) bRead(data interface{}, sz uintptr) error {
 func (d *decoder) nextChunk() (ident string, length uint32, err error) {
 	// Read chunk identity, like "RIFF" or "fmt "
 	var chunkIdent [4]byte
-	err = d.bRead(&chunkIdent, unsafe.Sizeof(chunkIdent))
+	err = d.bRead(&chunkIdent, binary.Size(chunkIdent))
 	if err != nil {
 		return "", 0, err
 	}
 	ident = string(chunkIdent[:])
 
 	// Read chunk length
-	err = d.bRead(&length, unsafe.Sizeof(length))
+	err = d.bRead(&length, binary.Size(length))
 	if err != nil {
 		return "", 0, err
 	}
@@ -101,7 +100,7 @@ func (d *decoder) readPCM8(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.PCM8
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -124,7 +123,7 @@ func (d *decoder) readPCM16(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.PCM16
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -147,7 +146,7 @@ func (d *decoder) readPCM24(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample [3]uint8
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -176,7 +175,7 @@ func (d *decoder) readPCM32(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.PCM32
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -199,7 +198,7 @@ func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.F32
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -219,7 +218,7 @@ func (d *decoder) readF64(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.F64
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -237,7 +236,7 @@ func (d *decoder) readMuLaw(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.MuLaw
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -260,7 +259,7 @@ func (d *decoder) readALaw(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.ALaw
 
-		err = d.bRead(&sample, unsafe.Sizeof(sample))
+		err = d.bRead(&sample, binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -366,14 +365,14 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 		switch ident {
 		case "RIFF":
 			var format [4]byte
-			err = d.bRead(&format, unsafe.Sizeof(format))
+			err = d.bRead(&format, binary.Size(format))
 			if string(format[:]) != "WAVE" {
 				return nil, audio.ErrInvalidData
 			}
 
 		case "fmt ":
 			// Always contains the 16-byte chunk
-			err = d.bRead(&c16, unsafe.Sizeof(c16))
+			err = d.bRead(&c16, binary.Size(c16))
 			if err != nil {
 				return nil, err
 			}
@@ -382,12 +381,12 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 			// Sometimes contains extensive 18/40 total byte chunks
 			switch length {
 			case 18:
-				err = d.bRead(&c18, unsafe.Sizeof(c18))
+				err = d.bRead(&c18, binary.Size(c18))
 				if err != nil {
 					return nil, err
 				}
 			case 40:
-				err = d.bRead(&c40, unsafe.Sizeof(c40))
+				err = d.bRead(&c40, binary.Size(c40))
 				if err != nil {
 					return nil, err
 				}
@@ -423,7 +422,7 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 		case "fact":
 			// We need to scan fact chunk first.
 			var fact factChunk
-			err = d.bRead(&fact, unsafe.Sizeof(fact))
+			err = d.bRead(&fact, binary.Size(fact))
 			if err != nil {
 				return nil, err
 			}
