@@ -11,37 +11,37 @@ type factChunk struct {
 // the 16-byte 'fmt' chunk
 type fmtChunk16 struct {
 	// Format code
-	FormatTag [2]byte
+	FormatTag uint16
 
 	// Number of interleaved channels
-	Channels [2]byte
+	Channels uint16
 
 	// Sampling rate (blocks per second)
-	SamplesPerSec [4]byte
+	SamplesPerSec uint32
 
 	// Data rate
-	AvgBytesPerSec [4]byte
+	AvgBytesPerSec uint32
 
 	// Data block size (bytes)
-	BlockAlign [2]byte
+	BlockAlign uint16
 
 	// Bits per sample
-	BitsPerSample [2]byte
+	BitsPerSample uint16
 }
 
 // the 18-byte 'fmt' chunk
 type fmtChunk18 struct {
 	// Size of the extension (0 or 22)
-	Size [2]byte
+	Size uint16
 }
 
 // the 40-byte 'fmt' chunk
 type fmtChunk40 struct {
 	// Number of valid bits
-	ValidBitsPerSample [2]byte
+	ValidBitsPerSample uint16
 
 	// Speaker position mask
-	ChannelMask [4]byte
+	ChannelMask uint32
 
 	// GUID, including the data format code
 	SubFormat [16]byte

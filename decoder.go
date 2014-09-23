@@ -326,14 +326,6 @@ func (d *decoder) Config() audio.Config {
 // This error only happens for audio files containing extensible wav data.
 var ErrUnsupported = errors.New("wav: data format is valid but not supported by decoder")
 
-func to32(b []byte) uint32 {
-	return binary.LittleEndian.Uint32(b)
-}
-
-func to16(b []byte) uint16 {
-	return binary.LittleEndian.Uint16(b)
-}
-
 // NewDecoder returns a new initialized audio decoder for the io.Reader or
 // io.ReadSeeker, r.
 func newDecoder(r interface{}) (audio.Decoder, error) {
@@ -376,7 +368,7 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 			if err != nil {
 				return nil, err
 			}
-			d.bitsPerSample = to16(c16.BitsPerSample[:])
+			d.bitsPerSample = c16.BitsPerSample
 
 			// Sometimes contains extensive 18/40 total byte chunks
 			switch length {
@@ -393,7 +385,7 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 			}
 
 			// Verify format tag
-			ft := to16(c16.FormatTag[:])
+			ft := c16.FormatTag
 			switch {
 			case ft == wave_FORMAT_PCM && (d.bitsPerSample == 8 || d.bitsPerSample == 16 || d.bitsPerSample == 24 || d.bitsPerSample == 32):
 				break
@@ -411,12 +403,12 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 			}
 
 			// Assign format tag for later (See Read() method)
-			d.format = to16(c16.FormatTag[:])
+			d.format = c16.FormatTag
 
 			// We now have enough information to build the audio configuration
 			d.config = &audio.Config{
-				Channels:   int(to16(c16.Channels[:])),
-				SampleRate: int(to32(c16.SamplesPerSec[:])),
+				Channels:   int(c16.Channels),
+				SampleRate: int(c16.SamplesPerSec),
 			}
 
 		case "fact":
