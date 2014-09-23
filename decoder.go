@@ -44,7 +44,13 @@ type decoder struct {
 	config *audio.Config
 }
 
-func (d *decoder) bRead(data interface{}, sz int) error {
+// advance advances the byte counter by sz. If the chunk size is known and
+// after advancement the byte counter is larger than the chunk size, then
+// audio.EOS is returned.
+//
+// If the chunk size is not known, the data chunk marker is extended by sz as
+// well.
+func (d *decoder) advance(sz int) error {
 	d.currentCount += uint32(sz)
 	if d.chunkSize > 0 {
 		if d.currentCount > d.chunkSize {
@@ -52,6 +58,14 @@ func (d *decoder) bRead(data interface{}, sz int) error {
 		}
 	} else {
 		d.dataChunkBegin += int32(sz)
+	}
+	return nil
+}
+
+func (d *decoder) bRead(data interface{}, sz int) error {
+	err := d.advance(sz)
+	if err != nil {
+		return err
 	}
 	return binary.Read(d.rd, binary.LittleEndian, data)
 }
@@ -100,7 +114,7 @@ func (d *decoder) readPCM8(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.PCM8
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 1) // 1 == binary.Size(sample)
 		if err != nil {
 			return
 		}
@@ -123,7 +137,7 @@ func (d *decoder) readPCM16(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.PCM16
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 2) // 2 == binary.Size(sample)
 		if err != nil {
 			return
 		}
@@ -146,7 +160,7 @@ func (d *decoder) readPCM24(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample [3]uint8
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 3) // 3 == binary.Size(sample)
 		if err != nil {
 			return
 		}
@@ -175,7 +189,7 @@ func (d *decoder) readPCM32(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.PCM32
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 4) // 4 == binary.Size(sample)
 		if err != nil {
 			return
 		}
@@ -198,7 +212,7 @@ func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.F32
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 4) // 4 == binary.Size(sample)
 		if err != nil {
 			return
 		}
@@ -218,7 +232,7 @@ func (d *decoder) readF64(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.F64
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 8) // 8 == binary.Size(sample))
 		if err != nil {
 			return
 		}
@@ -236,7 +250,7 @@ func (d *decoder) readMuLaw(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.MuLaw
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 1) // 1 == binary.Size(sample)
 		if err != nil {
 			return
 		}
@@ -259,7 +273,7 @@ func (d *decoder) readALaw(b audio.Slice) (read int, err error) {
 		// Pull one sample from the data stream
 		var sample audio.ALaw
 
-		err = d.bRead(&sample, binary.Size(sample))
+		err = d.bRead(&sample, 1) // 1 == binary.Size(sample)
 		if err != nil {
 			return
 		}
