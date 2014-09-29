@@ -300,6 +300,8 @@ func (d *decoder) Read(b audio.Slice) (read int, err error) {
 			return d.readPCM24(b)
 		case 32:
 			return d.readPCM32(b)
+		default:
+			panic("invalid bits per sample")
 		}
 
 	case wave_FORMAT_IEEE_FLOAT:
@@ -308,13 +310,16 @@ func (d *decoder) Read(b audio.Slice) (read int, err error) {
 			return d.readF32(b)
 		case 64:
 			return d.readF64(b)
+		default:
+			panic("invalid bits per sample")
 		}
 
 	case wave_FORMAT_MULAW:
 		return d.readMuLaw(b)
-
 	case wave_FORMAT_ALAW:
 		return d.readALaw(b)
+	default:
+		panic("invalid format")
 	}
 	return
 }
