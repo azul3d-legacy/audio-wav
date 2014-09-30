@@ -8,6 +8,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"io"
+	"math"
 	"sync"
 
 	"azul3d.org/audio.v1"
@@ -228,7 +229,7 @@ func (d *decoder) readPCM32(b audio.Slice) (read int, err error) {
 func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.F32Samples)
 
-	var sample float32
+	var sample uint32
 	for read = 0; read < b.Len(); read++ {
 		// Advance the reader.
 		err = d.advance(4) // 4 == binary.Size(sample)
@@ -243,9 +244,9 @@ func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 		}
 
 		if bbOk {
-			bb[read] = audio.F32(sample)
+			bb[read] = audio.F32(math.Float32frombits(sample))
 		} else {
-			b.Set(read, audio.F64(sample))
+			b.Set(read, audio.F64(math.Float32frombits(sample)))
 		}
 	}
 
@@ -253,7 +254,7 @@ func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 }
 
 func (d *decoder) readF64(b audio.Slice) (read int, err error) {
-	var sample float64
+	var sample uint64
 	for read = 0; read < b.Len(); read++ {
 		// Advance the reader.
 		err = d.advance(8) // 8 == binary.Size(sample)
@@ -267,7 +268,7 @@ func (d *decoder) readF64(b audio.Slice) (read int, err error) {
 			return
 		}
 
-		b.Set(read, audio.F64(sample))
+		b.Set(read, audio.F64(math.Float64frombits(sample)))
 	}
 
 	return
