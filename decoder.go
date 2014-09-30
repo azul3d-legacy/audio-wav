@@ -111,8 +111,11 @@ func (d *decoder) Seek(sample uint64) error {
 func (d *decoder) readPCM8(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.PCM8Samples)
 
-	var sample uint8
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample uint8
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(1) // 1 == binary.Size(sample)
 		if err != nil {
@@ -139,8 +142,11 @@ func (d *decoder) readPCM8(b audio.Slice) (read int, err error) {
 func (d *decoder) readPCM16(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.PCM16Samples)
 
-	var sample int16
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample int16
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(2) // 2 == binary.Size(sample)
 		if err != nil {
@@ -167,8 +173,11 @@ func (d *decoder) readPCM16(b audio.Slice) (read int, err error) {
 func (d *decoder) readPCM24(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.PCM32Samples)
 
-	var sample [3]uint8
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample [3]uint8
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(3) // 3 == binary.Size(sample)
 		if err != nil {
@@ -201,8 +210,11 @@ func (d *decoder) readPCM24(b audio.Slice) (read int, err error) {
 func (d *decoder) readPCM32(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.PCM32Samples)
 
-	var sample int32
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample int32
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(4) // 4 == binary.Size(sample)
 		if err != nil {
@@ -229,8 +241,11 @@ func (d *decoder) readPCM32(b audio.Slice) (read int, err error) {
 func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.F32Samples)
 
-	var sample uint32
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample uint32
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(4) // 4 == binary.Size(sample)
 		if err != nil {
@@ -254,8 +269,11 @@ func (d *decoder) readF32(b audio.Slice) (read int, err error) {
 }
 
 func (d *decoder) readF64(b audio.Slice) (read int, err error) {
-	var sample uint64
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample uint64
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(8) // 8 == binary.Size(sample)
 		if err != nil {
@@ -277,8 +295,11 @@ func (d *decoder) readF64(b audio.Slice) (read int, err error) {
 func (d *decoder) readMuLaw(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.MuLawSamples)
 
-	var sample uint8
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample uint8
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(1) // 1 == binary.Size(sample)
 		if err != nil {
@@ -305,8 +326,11 @@ func (d *decoder) readMuLaw(b audio.Slice) (read int, err error) {
 func (d *decoder) readALaw(b audio.Slice) (read int, err error) {
 	bb, bbOk := b.(audio.ALawSamples)
 
-	var sample uint8
-	for read = 0; read < b.Len(); read++ {
+	var (
+		sample uint8
+		length = b.Len()
+	)
+	for read = 0; read < length; read++ {
 		// Advance the reader.
 		err = d.advance(1) // 1 == binary.Size(sample)
 		if err != nil {
