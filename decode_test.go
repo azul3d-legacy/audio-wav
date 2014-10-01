@@ -82,7 +82,7 @@ func testDecode(t *testing.T, tst decodeTest) {
 func TestDecodeFloat32(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_float32.wav",
-		samplesTotal: 993566,
+		samplesTotal: 90502,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -94,7 +94,7 @@ func TestDecodeFloat32(t *testing.T) {
 func TestDecodeFloat64(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_float64.wav",
-		samplesTotal: 993577,
+		samplesTotal: 90513,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -106,31 +106,31 @@ func TestDecodeFloat64(t *testing.T) {
 func TestDecodeUInt8(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_uint8.wav",
-		samplesTotal: 993544,
+		samplesTotal: 90480,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
 		},
-		start: audio.PCM8Samples{128, 128, 128, 128, 127, 128, 127, 128, 128, 127, 128, 128, 127, 128, 127},
+		start: audio.PCM8Samples{128, 128, 128, 128, 128, 128, 127, 127, 128, 128, 128, 128, 128, 127, 128},
 	})
 }
 
 func TestDecodeInt16(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_int16.wav",
-		samplesTotal: 993566,
+		samplesTotal: 90502,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
 		},
-		start: audio.PCM16Samples{0, 0, 0, -1, 2, -2, 3, -3, 2, -1, 1, 0, 2, -3, 4},
+		start: audio.PCM16Samples{0, 0, 0, 0, 1, 0, -1, 0, 1, -1, -1, 2, 3, -2, 0},
 	})
 }
 
 func TestDecodeInt24(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_int24.wav",
-		samplesTotal: 993573,
+		samplesTotal: 90509,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -142,7 +142,7 @@ func TestDecodeInt24(t *testing.T) {
 func TestDecodeInt32(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_int32.wav",
-		samplesTotal: 993577,
+		samplesTotal: 90513,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -154,24 +154,24 @@ func TestDecodeInt32(t *testing.T) {
 func TestDecodeALaw(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_alaw.wav",
-		samplesTotal: 993530,
+		samplesTotal: 90466,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
 		},
-		start: audio.ALawSamples{213, 213, 85, 213, 85, 213, 85, 213, 85, 213, 85, 213, 213, 213, 213},
+		start: audio.ALawSamples{213, 213, 213, 213, 213, 213, 213, 213, 213, 213, 213, 213, 213, 85, 213},
 	})
 }
 
 func TestDecodeMuLaw(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_mulaw.wav",
-		samplesTotal: 993530,
+		samplesTotal: 90466,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
 		},
-		start: audio.MuLawSamples{255, 255, 255, 255, 255, 255, 127, 255, 255, 127, 255, 255, 127, 255, 127},
+		start: audio.MuLawSamples{127, 255, 255, 255, 127, 127, 255, 255, 127, 127, 255, 255, 127, 127, 255},
 	})
 }
 
