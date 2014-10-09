@@ -62,13 +62,6 @@ func (enc *encoder) Write(b audio.Slice) (n int, err error) {
 	var buf [3]byte
 	var at func(i int) []byte
 	switch v := b.(type) {
-	case audio.PCM8Samples:
-		panic("not yet implemented.")
-		at = func(i int) []byte {
-			// Unsigned 8-bit PCM audio sample.
-			buf[0] = uint8(0x80 + v[i])
-			return buf[:1]
-		}
 	case audio.PCM16Samples:
 		at = func(i int) []byte {
 			// Signed 16-bit PCM audio sample.
@@ -76,16 +69,6 @@ func (enc *encoder) Write(b audio.Slice) (n int, err error) {
 			buf[0] = uint8(sample)
 			buf[1] = uint8(sample >> 8)
 			return buf[:2]
-		}
-	case audio.PCM32Samples:
-		panic("not yet implemented.")
-		at = func(i int) []byte {
-			// Signed 32-bit PCM audio sample.
-			sample := v[i]
-			buf[0] = uint8(sample)
-			buf[1] = uint8(sample >> 8)
-			buf[2] = uint8(sample >> 16)
-			return buf[:3]
 		}
 	default:
 		at = func(i int) []byte {
