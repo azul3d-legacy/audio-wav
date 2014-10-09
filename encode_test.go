@@ -27,10 +27,13 @@ func countFill(s audio.Slice) {
 }
 
 func testEncode(t *testing.T, tst encodeTest) {
+	// Create a temp file that we will encode to.
 	tmpFile, err := ioutil.TempFile("", "wav")
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	// Once we are done, we need to close the temp file and remove it.
 	defer func() {
 		err := tmpFile.Close()
 		if err != nil {
@@ -39,6 +42,7 @@ func testEncode(t *testing.T, tst encodeTest) {
 		err = os.Remove(tmpFile.Name())
 	}()
 
+	// Create a new encoder, writing to the temp file with the given config.
 	enc, err := NewEncoder(tmpFile, tst.Config)
 	if err != nil {
 		t.Fatal(err)
