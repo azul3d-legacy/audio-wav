@@ -206,3 +206,91 @@ func TestEncodeMuLaw(t *testing.T) {
 		format: audio.MuLawSamples{},
 	})
 }
+
+func benchEncode(b *testing.B, format audio.Slice) {
+	// TODO(slimsag): We are inheritely also benchmarking IO performance by
+	// encoding to a temp file. This should be eliminated but cannot easilly
+	// because there is no buffered io.WriteSeeker available yet.
+
+	// Create a temp file that we will encode to.
+	tmpFile, err := ioutil.TempFile("", "wav")
+	if err != nil {
+		b.Fatal(err)
+	}
+
+	// Once we are done, we need to close the temp file and remove it.
+	defer func() {
+		err := tmpFile.Close()
+		if err != nil {
+			b.Fatal(err)
+		}
+		err = os.Remove(tmpFile.Name())
+	}()
+
+	// Create a slice large enough to hold 1 tenth second of audio samples.
+	cfg := audio.Config{
+		SampleRate: 44100,
+		Channels:   2,
+	}
+	bufSize := 1 * cfg.SampleRate * cfg.Channels
+	buf := format.Make(bufSize, bufSize)
+
+	// Fill the buffer with counting numbers.
+	countFill(buf)
+
+	// Reset the timer so we don't benchmark the above initialization.
+	b.ResetTimer()
+
+	// Encode the data b.N times.
+	for i := 0; i < b.N; i++ {
+		// Create a new encoder.
+		enc, err := NewEncoder(tmpFile, cfg)
+		if err != nil {
+			b.Fatal(err)
+		}
+
+		// Encode the entire buffer.
+		_, err = audio.Copy(enc, audio.NewBuffer(buf))
+		if err != nil {
+			b.Fatal(err)
+		}
+
+		// Done encoding, close the encoder.
+		err = enc.Close()
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkEncodeFloat32(b *testing.B) {
+	benchEncode(b, audio.F32Samples{})
+}
+
+func BenchmarkEncodeFloat64(b *testing.B) {
+	benchEncode(b, audio.F64Samples{})
+}
+
+func BenchmarkEncodeUint8(b *testing.B) {
+	benchEncode(b, audio.PCM8Samples{})
+}
+
+func BenchmarkEncodeInt16(b *testing.B) {
+	benchEncode(b, audio.PCM16Samples{})
+}
+
+func BenchmarkEncodeInt24(b *testing.B) {
+	benchEncode(b, audio.PCM32Samples{})
+}
+
+func BenchmarkEncodeInt32(b *testing.B) {
+	benchEncode(b, audio.PCM32Samples{})
+}
+
+func BenchmarkEncodeALaw(b *testing.B) {
+	benchEncode(b, audio.PCM8Samples{})
+}
+
+func BenchmarkEncodeMuLaw(b *testing.B) {
+	benchEncode(b, audio.MuLawSamples{})
+}
