@@ -90,7 +90,7 @@ func (enc *encoder) Write(b audio.Slice) (n int, err error) {
 	default:
 		at = func(i int) []byte {
 			// Generic implementation.
-			// TODO(u): Update to support 32-bit PCM audio samples, one the rest of
+			// TODO(u): Update to support 32-bit PCM audio samples, once the rest of
 			// the encoder does so.
 			sample := audio.F64ToPCM16(b.At(i))
 			buf[0] = uint8(sample)
