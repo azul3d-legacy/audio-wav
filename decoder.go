@@ -52,8 +52,8 @@ type decoder struct {
 // If the chunk size is not known, the data chunk marker is extended by sz as
 // well.
 func (d *decoder) advance(sz int) error {
-	d.currentCount += uint32(sz)
 	if d.chunkSize > 0 {
+		d.currentCount += uint32(sz)
 		if d.currentCount > d.chunkSize {
 			return audio.EOS
 		}

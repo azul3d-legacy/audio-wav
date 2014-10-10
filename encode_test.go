@@ -126,7 +126,7 @@ func testEncode(t *testing.T, tst encodeTest) {
 
 	if int(read) != totalWrote {
 		// TODO(slimsag): fix this, see issue #12.
-		//t.Fatalf("read %d samples wanted %d\n", read, totalWrote)
+		t.Fatalf("read %d samples wanted %d\n", read, totalWrote)
 	}
 	for i := 0; i < buf2.Samples().Len(); i++ {
 		got := buf2.Samples().At(i)
