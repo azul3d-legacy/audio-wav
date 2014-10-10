@@ -242,7 +242,7 @@ func BenchmarkDecodeInt32(b *testing.B) {
 }
 
 func BenchmarkDecodeALaw(b *testing.B) {
-	benchDecode(b, audio.PCM8Samples{}, "testdata/tune_stereo_44100hz_alaw.wav")
+	benchDecode(b, audio.ALawSamples{}, "testdata/tune_stereo_44100hz_alaw.wav")
 }
 
 func BenchmarkDecodeMuLaw(b *testing.B) {

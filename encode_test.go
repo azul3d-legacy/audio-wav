@@ -288,7 +288,7 @@ func BenchmarkEncodeInt32(b *testing.B) {
 }
 
 func BenchmarkEncodeALaw(b *testing.B) {
-	benchEncode(b, audio.PCM8Samples{})
+	benchEncode(b, audio.ALawSamples{})
 }
 
 func BenchmarkEncodeMuLaw(b *testing.B) {
