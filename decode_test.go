@@ -82,7 +82,7 @@ func testDecode(t *testing.T, tst decodeTest) {
 func TestDecodeFloat32(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_float32.wav",
-		samplesTotal: 90502,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -94,7 +94,7 @@ func TestDecodeFloat32(t *testing.T) {
 func TestDecodeFloat64(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_float64.wav",
-		samplesTotal: 90513,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -106,7 +106,7 @@ func TestDecodeFloat64(t *testing.T) {
 func TestDecodeUInt8(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_uint8.wav",
-		samplesTotal: 90480,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -118,7 +118,7 @@ func TestDecodeUInt8(t *testing.T) {
 func TestDecodeInt16(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_int16.wav",
-		samplesTotal: 90502,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -130,7 +130,7 @@ func TestDecodeInt16(t *testing.T) {
 func TestDecodeInt24(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_int24.wav",
-		samplesTotal: 90509,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -142,7 +142,7 @@ func TestDecodeInt24(t *testing.T) {
 func TestDecodeInt32(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_int32.wav",
-		samplesTotal: 90513,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -154,7 +154,7 @@ func TestDecodeInt32(t *testing.T) {
 func TestDecodeALaw(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_alaw.wav",
-		samplesTotal: 90466,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -166,7 +166,7 @@ func TestDecodeALaw(t *testing.T) {
 func TestDecodeMuLaw(t *testing.T) {
 	testDecode(t, decodeTest{
 		file:         "testdata/tune_stereo_44100hz_mulaw.wav",
-		samplesTotal: 90466,
+		samplesTotal: 90524,
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
@@ -242,7 +242,7 @@ func BenchmarkDecodeInt32(b *testing.B) {
 }
 
 func BenchmarkDecodeALaw(b *testing.B) {
-	benchDecode(b, audio.PCM8Samples{}, "testdata/tune_stereo_44100hz_alaw.wav")
+	benchDecode(b, audio.ALawSamples{}, "testdata/tune_stereo_44100hz_alaw.wav")
 }
 
 func BenchmarkDecodeMuLaw(b *testing.B) {
