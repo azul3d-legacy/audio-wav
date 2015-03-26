@@ -523,6 +523,14 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 				SampleRate: int(c16.SamplesPerSec),
 			}
 
+		case "LIST":
+			// Read and skip info tag
+			var infotag [4]byte
+			err = d.bRead(&infotag, binary.Size(infotag))
+			if err != nil {
+				return nil, err
+			}
+
 		case "fact":
 			// We need to scan fact chunk first.
 			var fact factChunk
