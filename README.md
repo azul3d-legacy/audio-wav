@@ -2,6 +2,10 @@
 
 This package decodes and encodes wav audio files.
 
+# Version 1.1.1 #
+
+* Fixed decoding of files containing LIST meta-data ([#15](https://github.com/azul3d/audio-wav/pull/15)).
+
 # Version 1.1 #
 
 * Documentation
