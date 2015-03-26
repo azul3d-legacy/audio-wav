@@ -175,6 +175,18 @@ func TestDecodeMuLaw(t *testing.T) {
 	})
 }
 
+func TestDecodeListData(t *testing.T) {
+	testDecode(t, decodeTest{
+		file:         "testdata/list_data.wav",
+		samplesTotal: 16000,
+		Config: audio.Config{
+			SampleRate: 16000,
+			Channels:   1,
+		},
+		start: audio.PCM16Samples{-397, -140, -737, 907, -66, -552, 584, 40, 322, 458, -624, -46, -52, 180, -28},
+	})
+}
+
 func benchDecode(b *testing.B, fmt audio.Slice, path string) {
 	// Read the file into memory so we are strictly benchmarking the decoder,
 	// avoiding disk read performance.
