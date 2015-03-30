@@ -521,6 +521,7 @@ func newDecoder(r interface{}) (audio.Decoder, error) {
 			d.config = &audio.Config{
 				Channels:   int(c16.Channels),
 				SampleRate: int(c16.SamplesPerSec),
+				BPS:        int(d.bitsPerSample),
 			}
 
 		case "LIST":
