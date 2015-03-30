@@ -142,6 +142,7 @@ func TestEncodeFloat32(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.F32Samples{},
 	})
@@ -152,6 +153,7 @@ func TestEncodeFloat64(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.F64Samples{},
 	})
@@ -162,6 +164,7 @@ func TestEncodeUInt8(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.PCM8Samples{},
 	})
@@ -172,6 +175,7 @@ func TestEncodeInt16(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.PCM16Samples{},
 	})
@@ -182,6 +186,7 @@ func TestEncodeInt32(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.PCM32Samples{},
 	})
@@ -192,6 +197,7 @@ func TestEncodeALaw(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.ALawSamples{},
 	})
@@ -202,6 +208,7 @@ func TestEncodeMuLaw(t *testing.T) {
 		Config: audio.Config{
 			SampleRate: 44100,
 			Channels:   2,
+			BPS:        16,
 		},
 		format: audio.MuLawSamples{},
 	})

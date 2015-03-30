@@ -36,7 +36,13 @@ func NewEncoder(w io.WriteSeeker, conf audio.Config) (audio.Encoder, error) {
 	// Write WAV file header to w, based on the audio configuration.
 	// TODO(u): Add output support for additional audio sample format; instead of
 	// only using 16-bit PCM.
-	enc := &encoder{bw: bufio.NewWriter(w), ws: w, conf: conf, bps: 16}
+	var bps uint8 = 16
+
+	if conf.BPS != 0 {
+		bps = uint8(conf.BPS)
+	}
+
+	enc := &encoder{bw: bufio.NewWriter(w), ws: w, conf: conf, bps: bps}
 	err := enc.writeHeader()
 	if err != nil {
 		return nil, err
